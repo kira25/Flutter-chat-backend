@@ -1,37 +1,22 @@
 //Sockets messages
 const { io } = require("../index");
 const { ensureJWT } = require("../helpers/jwt");
-const { userConnected, userDisconnected, saveMessage } = require("../controllers/socket");
 
 io.on("connection", (client) => {
   console.log("Client connected");
-
+  // console.log(client.handshake.headers["x-token"]);
   //Validacion para permitir el acceso solo a los clientes que brinden su token
   const [valid, uid] = ensureJWT(client.handshake.headers["x-token"]);
   console.log(valid, uid);
 
-  //Verificar autenticacion
+
   if (!valid) {
     return client.disconnect();
   }
   console.log("Client authenticated");
 
-  //Cliente autenticado
-  userConnected(uid);
-
-  //Ingresar al usuario a una sala
-  client.join(uid);
-
-  client.on("mensaje-personal", async(payload) => {
-    console.log(payload);
-    //Grabar mensaje
-    await saveMessage(payload)
-    io.to(payload.para).emit('mensaje-personal',payload);
-  });
-
   client.on("disconnect", () => {
     console.log("Disconnected client");
-    userDisconnected(uid);
   });
   // client.on("message", (payload) => {
   //   console.log("Message!!", payload);

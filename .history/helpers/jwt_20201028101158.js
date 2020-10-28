@@ -29,7 +29,7 @@ const ensureJWT = (token = "") => {
   try {
     //obtenemos el uid
     const { uid } = jwt.verify(token, process.env.JWT_KEY);
-
+    req.uid = uid;
     return [true, uid];
   } catch (error) {
     return [false, null];
@@ -38,5 +38,4 @@ const ensureJWT = (token = "") => {
 
 module.exports = {
   generateJWT,
-  ensureJWT,
 };

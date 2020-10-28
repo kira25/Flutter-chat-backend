@@ -85,8 +85,8 @@ const renewToken = async (req, res = response) => {
 
     res.json({
       ok: true,
-      user: userbyToken,
-      token,
+      userbyToken,
+      token
     });
   } catch (error) {
     console.log(error);

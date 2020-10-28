@@ -1,7 +1,7 @@
 //Sockets messages
 const { io } = require("../index");
 const { ensureJWT } = require("../helpers/jwt");
-const { userConnected, userDisconnected, saveMessage } = require("../controllers/socket");
+const { userConnected, userDisconnected } = require("../controllers/socket");
 
 io.on("connection", (client) => {
   console.log("Client connected");
@@ -22,10 +22,10 @@ io.on("connection", (client) => {
   //Ingresar al usuario a una sala
   client.join(uid);
 
-  client.on("mensaje-personal", async(payload) => {
+  client.on("mensaje-personal", (payload) => {
     console.log(payload);
     //Grabar mensaje
-    await saveMessage(payload)
+    
     io.to(payload.para).emit('mensaje-personal',payload);
   });
 
